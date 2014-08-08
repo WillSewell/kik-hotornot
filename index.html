@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>kik Hot or Not</title>
+    <meta name="viewport" content="width=device-width,
+                                   initial-scale=1.0,
+                                   maximum-scale=1.0,
+                                   user-scalable=no,
+                                   minimal-ui">
+    <link rel="stylesheet" href="http://cdn.kik.com/app/2.0.1/app.min.css">
+    <style>
+      #hot {
+        float:right;
+        width:49%;
+        color:black;
+        background-color:#80B214;
+      }
+      #not {
+        float:left;
+        width:49%;
+        color:black;
+        background-color:#CC3216;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="app-page viewer-page dark-page" data-page="viewer">
+      <div class="app-topbar">
+        <div class="left app-button" data-back="true">Back</div>
+        <div class="app-title"><span class="app-icon"></span>Hot or Not</div>
+      </div>
+      <div class="app-content">
+        <div id="img"></div>
+        <div id="not" class="right app-button" align="center">Not</div>
+        <div id="hot" class="left app-button" align="center">Hot</div>
+        <div id="test" class="app-button"></div>
+      </div>
+    </div>
+
+    <script src="http://cdn.kik.com/kik/1.0.9/kik.js"></script>
+    <script src="http://cdn.kik.com/app/2.0.1/app.min.js"></script>
+    <script src="http://zeptojs.com/zepto.min.js"></script>
+    <script>
+      App.controller('viewer', function (page) {
+        if (kik.getUser) {
+          kik.getUser(function (user) {
+            if (!user) {
+              $(page).find('#test').text('error!');
+            } else {
+              $(page).find('#img').html('<img src="' + user.pic + '" width="' + $(window).width() + '">');
+            }
+          });
+        }
+      });
+
+      App.load('viewer');
+    </script>
+  </body>
+</html>
