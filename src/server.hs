@@ -4,15 +4,7 @@ module Main where
 
 import Control.Applicative
 import Control.Monad
-import Control.Monad.IO.Class
-import Data.Maybe (fromMaybe)
-import Data.Text (Text)
-import Data.Text.Lazy (unpack)
 import Happstack.Lite
-import Text.Blaze.Html5 (Html, (!), a, form, input, p, toHtml, label)
-import Text.Blaze.Html5.Attributes (action, enctype, href, name, size, type_, value)
-import qualified Text.Blaze.Html5 as H
-import qualified Text.Blaze.Html5.Attributes as A
 import Database.PostgreSQL.Simple
 import Database.PostgreSQL.Simple.FromRow
 import qualified Data.Text as Text
