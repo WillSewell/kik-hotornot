@@ -42,6 +42,9 @@
     <script src="http://zeptojs.com/zepto.min.js"></script>
     <script>
       App.controller('viewer', function (page) {
+                      $.getJSON('http://localhost:8000/?callback=?', function (data) {
+                $(page).find('#img').html('<img src="' + data.profilePic + '" width="' + $(window).width() + '">');
+              });
         if (kik.getUser) {
           kik.getUser(function (user) {
             if (!user) {

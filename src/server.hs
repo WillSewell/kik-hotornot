@@ -4,7 +4,8 @@ module Main where
 
 import Control.Applicative
 import Control.Monad
-import Happstack.Lite
+import Snap.Core
+import Snap.Http.Server
 import Database.PostgreSQL.Simple
 import Database.PostgreSQL.Simple.FromRow
 import qualified Data.Text as Text
@@ -31,8 +32,8 @@ instance ToJSON User where
 
 main :: IO ()
 main = do
-    xs <- getUsers
-    serve Nothing $ myApp xs
+  xs <- getUsers
+  quickHttpServe $ site xs
 
 getUsers :: IO [User]
 getUsers = do
@@ -52,10 +53,5 @@ readDbCfg = do
 getCfgItem :: OptionSpec -> [(OptionSpec, String)] -> String
 getCfgItem k xs = snd $ head $ filter (\(x, _) -> x == k) xs
 
-myApp :: [User] -> ServerPart Response
-myApp users = msum
-    [ homePage users
-    ]
-
-homePage :: [User] -> ServerPart Response
-homePage users = ok $ toResponse $ encode $ head users
+site :: [User] -> Snap ()
+site users = ifTop $ writeLBS $ encode $ head users
