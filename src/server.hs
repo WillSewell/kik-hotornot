@@ -6,6 +6,7 @@ import Control.Applicative
 import Control.Monad
 import Snap.Core
 import Snap.Http.Server
+import Snap.Extras.JSON
 import Database.PostgreSQL.Simple
 import Database.PostgreSQL.Simple.FromRow
 import qualified Data.Text as Text
@@ -54,4 +55,9 @@ getCfgItem :: OptionSpec -> [(OptionSpec, String)] -> String
 getCfgItem k xs = snd $ head $ filter (\(x, _) -> x == k) xs
 
 site :: [User] -> Snap ()
-site users = ifTop $ writeLBS $ encode $ head users
+site users = do 
+  Just param <- getParam "callback"
+  writeBS param ++ "("
+  writeBS "("
+  ifTop $ writeJSON $ head users
+  writeBS ")"
