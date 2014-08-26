@@ -1,20 +1,21 @@
-{-# LANGUAGE OverloadedStrings, ScopedTypeVariables #-}
+{-# LANGUAGE OverloadedStrings   #-}
+{-# LANGUAGE ScopedTypeVariables #-}
 
 module Main where
 
-import Control.Applicative
-import Control.Monad
-import Snap.Core
-import Snap.Http.Server
-import Snap.Extras.JSON
-import Database.PostgreSQL.Simple
-import Database.PostgreSQL.Simple.FromRow
-import qualified Data.Text as Text
-import Data.ConfigFile
-import Data.Either.Utils
-import Data.Aeson
+import           Control.Applicative
+import           Control.Monad
+import           Data.Aeson
+import           Data.ConfigFile
+import           Data.Either.Utils
+import qualified Data.Text                          as Text
+import           Database.PostgreSQL.Simple
+import           Database.PostgreSQL.Simple.FromRow
+import           Snap.Core
+import           Snap.Extras.JSON
+import           Snap.Http.Server
 
-data User = User { username :: Text.Text
+data User = User { username   :: Text.Text
                  , profilePic :: Text.Text
                  }
 
@@ -55,9 +56,9 @@ getCfgItem :: OptionSpec -> [(OptionSpec, String)] -> String
 getCfgItem k xs = snd $ head $ filter (\(x, _) -> x == k) xs
 
 site :: [User] -> Snap ()
-site users = do 
+site users = do
   Just param <- getParam "callback"
-  writeBS param ++ "("
+  writeBS param
   writeBS "("
   ifTop $ writeJSON $ head users
   writeBS ")"
