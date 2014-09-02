@@ -4,7 +4,6 @@
 module Main where
 
 import           Control.Applicative
-import           Control.Monad
 import           Data.Aeson
 import           Data.ConfigFile
 import           Data.Either.Utils
@@ -23,13 +22,13 @@ instance FromRow User where
   fromRow = User <$> field <*> field
 
 instance Show User where
-    show (User username profilePic) =
-      "Project { username: " ++ Text.unpack username ++ ", profilePic: " ++ Text.unpack profilePic ++ " }"
+    show (User {username=u, profilePic=p}) =
+      "Project { username: " ++ Text.unpack u ++ ", profilePic: " ++ Text.unpack p ++ " }"
 
 instance ToJSON User where
- toJSON (User username profilePic) =
-    object [ "username" .= username
-           , "profilePic" .= profilePic
+ toJSON (User {username=u, profilePic=p}) =
+    object [ "username" .= u
+           , "profilePic" .= p
            ]
 
 main :: IO ()
