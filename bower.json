@@ -1,0 +1,13 @@
+{
+  "name": "kik-hotornot",
+  "version": "0.1.0",
+  "homepage": "https://github.com/WillSewell/kik-hotornot",
+  "authors": [
+    "Will Sewell <me@willsewell.com>"
+  ],
+  "license": "MIT",
+  "dependencies": {
+    "appjs": "kikinteractive/app#~3.0.5",
+    "zepto": "madrobby/zepto#~1.1.6"
+  }
+}
