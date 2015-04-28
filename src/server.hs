@@ -14,22 +14,23 @@ import Snap.Http.Server
 import qualified Data.ByteString.Lazy as BL
 import qualified Data.Text as Text
 
-data User = User { username   :: Text.Text
-                 , profilePic :: Text.Text
-                 }
+data User = User
+  { username   :: Text.Text
+  , profilePic :: Text.Text
+  }
 
 instance FromRow User where
   fromRow = User <$> field <*> field
 
 instance Show User where
-    show (User {username=u, profilePic=p}) =
-      "Project { username: " ++ Text.unpack u ++ ", profilePic: " ++ Text.unpack p ++ " }"
+  show (User { username = u, profilePic = p }) =
+    "Project { username: " ++ Text.unpack u ++ ", profilePic: " ++ Text.unpack p ++ " }"
 
 instance ToJSON User where
- toJSON (User {username=u, profilePic=p}) =
-    object [ "username" .= u
-           , "profilePic" .= p
-           ]
+  toJSON (User { username = u, profilePic = p }) = object
+    [ "username" .= u
+    , "profilePic" .= p
+    ]
 
 main :: IO ()
 main = do
@@ -38,18 +39,20 @@ main = do
 
 getUsers :: IO [User]
 getUsers = do
-    dbCfg <- readDbCfg
-    conn <- connect defaultConnectInfo { connectDatabase = getCfgItem "database" dbCfg
-                                       , connectUser = getCfgItem "user" dbCfg
-                                       , connectPassword = getCfgItem "password" dbCfg
-                                       }
-    query conn "SELECT username, cur_profile_pic FROM users WHERE username=?" $ Only ("fractalsea" :: String)
+  dbCfg <- readDbCfg
+  conn <- connect defaultConnectInfo
+    { connectDatabase = getCfgItem "database" dbCfg
+    , connectUser = getCfgItem "user" dbCfg
+    , connectPassword = getCfgItem "password" dbCfg
+    }
+  query conn "SELECT username, cur_profile_pic FROM users WHERE username=?" $
+    Only ("fractalsea" :: String)
 
 readDbCfg :: IO [(OptionSpec, String)]
 readDbCfg = do
-    val <- readfile emptyCP "db.ini"
-    let cp = forceEither val
-    return $ forceEither $ items cp "db"
+  val <- readfile emptyCP "db.ini"
+  let cp = forceEither val
+  return $ forceEither $ items cp "db"
 
 getCfgItem :: OptionSpec -> [(OptionSpec, String)] -> String
 getCfgItem k xs = snd $ head $ filter (\(x, _) -> x == k) xs
