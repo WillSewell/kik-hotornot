@@ -7,11 +7,11 @@ import           Control.Applicative
 import           Data.Aeson
 import           Data.ConfigFile
 import           Data.Either.Utils
+import qualified Data.ByteString.Lazy               as BL
 import qualified Data.Text                          as Text
 import           Database.PostgreSQL.Simple
 import           Database.PostgreSQL.Simple.FromRow
 import           Snap.Core
-import           Snap.Extras.JSON
 import           Snap.Http.Server
 
 data User = User { username   :: Text.Text
@@ -47,7 +47,7 @@ getUsers = do
 
 readDbCfg :: IO [(OptionSpec, String)]
 readDbCfg = do
-    val <- readfile emptyCP "../db.ini"
+    val <- readfile emptyCP "db.ini"
     let cp = forceEither val
     return $ forceEither $ items cp "db"
 
@@ -59,5 +59,5 @@ site users = do
   Just param <- getParam "callback"
   writeBS param
   writeBS "("
-  ifTop $ writeJSON $ head users
+  ifTop $ writeBS $ BL.toStrict $ encode $ head users
   writeBS ")"

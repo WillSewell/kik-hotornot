@@ -1,0 +1,21 @@
+name:                kik-hotornot
+version:             0.1.0.0
+author:              Will Sewell
+maintainer:          me@willsewell.com
+category:            Web
+build-type:          Simple
+cabal-version:       >=1.10
+
+executable kik-hotornot
+  main-is:             server.hs
+  build-depends:       aeson,
+                       base,
+                       bytestring,
+                       ConfigFile,
+                       MissingH,
+                       postgresql-simple,
+                       snap-core,
+                       snap-server,
+                       text
+  hs-source-dirs:      src
+  default-language:    Haskell2010
