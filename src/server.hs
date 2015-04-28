@@ -3,16 +3,16 @@
 
 module Main where
 
-import           Control.Applicative
-import           Data.Aeson
-import           Data.ConfigFile
-import           Data.Either.Utils
-import qualified Data.ByteString.Lazy               as BL
-import qualified Data.Text                          as Text
-import           Database.PostgreSQL.Simple
-import           Database.PostgreSQL.Simple.FromRow
-import           Snap.Core
-import           Snap.Http.Server
+import Control.Applicative
+import Data.Aeson
+import Data.ConfigFile
+import Data.Either.Utils
+import Database.PostgreSQL.Simple
+import Database.PostgreSQL.Simple.FromRow
+import Snap.Core
+import Snap.Http.Server
+import qualified Data.ByteString.Lazy as BL
+import qualified Data.Text as Text
 
 data User = User { username   :: Text.Text
                  , profilePic :: Text.Text
