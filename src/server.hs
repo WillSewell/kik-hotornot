@@ -1,4 +1,4 @@
-{-# LANGUAGE OverloadedStrings   #-}
+{-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE ScopedTypeVariables #-}
 
 module Main where
@@ -12,11 +12,11 @@ import Database.PostgreSQL.Simple.FromRow
 import Snap.Core
 import Snap.Http.Server
 import qualified Data.ByteString.Lazy as BL
-import qualified Data.Text as Text
+import qualified Data.Text as T
 
 data User = User
-  { username   :: Text.Text
-  , profilePic :: Text.Text
+  { username   :: T.Text
+  , profilePic :: T.Text
   }
 
 instance FromRow User where
@@ -24,7 +24,7 @@ instance FromRow User where
 
 instance Show User where
   show (User { username = u, profilePic = p }) =
-    "Project { username: " ++ Text.unpack u ++ ", profilePic: " ++ Text.unpack p ++ " }"
+    "Project { username: " ++ T.unpack u ++ ", profilePic: " ++ T.unpack p ++ " }"
 
 instance ToJSON User where
   toJSON (User { username = u, profilePic = p }) = object
