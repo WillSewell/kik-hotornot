@@ -41,24 +41,28 @@
     <script src="public/vendor/appjs/dist/app.js"></script>
     <script src="public/vendor/zepto/dist/zepto.js"></script>
     <script>
-      App.controller('viewer', function (page) {
-                      $.getJSON('http://localhost:8000/?callback=?', function (data) {
-                $(page).find('#img').html('<img src="' + data.profilePic + '" width="' + $(window).width() + '">');
-              });
-        if (kik.getUser) {
-          kik.getUser(function (user) {
-            if (!user) {
-              $(page).find('#test').text('error!');
-            } else {
-              $.getJSON('http://localhost:8000/?callback=?', function (data) {
-                $(page).find('#img').html('<img src="' + data.profilePic + '" width="' + $(window).width() + '">');
-              });
-            }
-          });
-        }
-      });
+App.controller('viewer', function (page) {
+  $.getJSON('http://localhost:8000/?callback=?', function (data) {
+    $(page).find('#img').html(
+      '<img src="' + data.profilePic + '" width="' + $(window).width() + '">'
+    );
+  });
+  if (kik.getUser) {
+    kik.getUser(function (user) {
+      if (!user) {
+        $(page).find('#test').text('error!');
+      } else {
+        $.getJSON('http://localhost:8000/?callback=?', function (data) {
+          $(page).find('#img').html(
+            '<img src="' + data.profilePic + '" width="' + $(window).width() + '">'
+          );
+        });
+      }
+    });
+  }
+});
 
-      App.load('viewer');
+App.load('viewer');
     </script>
   </body>
 </html>
