@@ -3,14 +3,23 @@
 
 module Main where
 
-import Control.Applicative
-import Data.Aeson
-import Data.ConfigFile
-import Data.Either.Utils
+import Control.Applicative ((<$>), (<*>))
+import Data.Aeson ((.=))
+import Data.ConfigFile (OptionSpec, emptyCP, items, readfile)
+import Data.Either.Utils (forceEither)
 import Database.PostgreSQL.Simple
-import Database.PostgreSQL.Simple.FromRow
-import Snap.Core
-import Snap.Http.Server
+  ( Only(Only)
+  , connect
+  , connectDatabase
+  , connectPassword
+  , connectUser
+  , defaultConnectInfo
+  , query
+  )
+import Database.PostgreSQL.Simple.FromRow (FromRow(fromRow), field)
+import Snap.Core (Snap, getParam, ifTop,writeBS)
+import Snap.Http.Server (quickHttpServe)
+import qualified Data.Aeson as A
 import qualified Data.ByteString.Lazy as BL
 import qualified Data.Text as T
 
@@ -26,8 +35,8 @@ instance Show User where
   show (User { username = u, profilePic = p }) =
     "Project { username: " ++ T.unpack u ++ ", profilePic: " ++ T.unpack p ++ " }"
 
-instance ToJSON User where
-  toJSON (User { username = u, profilePic = p }) = object
+instance A.ToJSON User where
+  toJSON (User { username = u, profilePic = p }) = A.object
     [ "username" .= u
     , "profilePic" .= p
     ]
@@ -62,5 +71,5 @@ site users = do
   Just param <- getParam "callback"
   writeBS param
   writeBS "("
-  ifTop $ writeBS $ BL.toStrict $ encode $ head users
+  ifTop $ writeBS $ BL.toStrict $ A.encode $ head users
   writeBS ")"
