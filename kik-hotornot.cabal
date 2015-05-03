@@ -13,9 +13,11 @@ executable kik-hotornot
                        bytestring,
                        ConfigFile,
                        MissingH,
+                       mtl,
                        postgresql-simple,
                        snap-core,
                        snap-server,
+                       transformers,
                        text
   hs-source-dirs:      src
   default-language:    Haskell2010
