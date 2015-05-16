@@ -21,7 +21,15 @@ import Database.PostgreSQL.Simple
   , query_
   )
 import Database.PostgreSQL.Simple.FromRow (FromRow(fromRow), field)
-import Snap.Core (Snap, getParam, ifTop, modifyResponse, setContentType, writeBS)
+import Snap.Core
+  ( Snap
+  , getParam
+  , ifTop
+  , modifyResponse
+  , route
+  , setContentType
+  , writeBS
+  )
 import Snap.Http.Server (quickHttpServe)
 import qualified Data.Aeson as A
 import qualified Data.ByteString.Lazy as BL
@@ -86,8 +94,8 @@ getRandomUser = do
     <> "OFFSET FLOOR(RANDOM() * (SELECT COUNT(*) FROM users)) LIMIT 1")
   return $ head res
 
-site :: ReaderErrorSnap ()
-site = do
+randomUserHandler :: ReaderErrorSnap ()
+randomUserHandler = do
   user <- getRandomUser
   Just param <- getParam "callback"
   modifyResponse (setContentType "application/javascript")
@@ -95,3 +103,7 @@ site = do
   writeBS "("
   ifTop $ writeBS $ BL.toStrict $ A.encode user
   writeBS ")"
+
+site :: ReaderErrorSnap ()
+site = do
+  route [("/random-user", randomUserHandler)]
