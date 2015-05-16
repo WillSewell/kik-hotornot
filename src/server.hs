@@ -83,7 +83,7 @@ getRandomUser = do
   conn <- ask
   res <- liftIO $ query_ conn (
     "SELECT username, cur_profile_pic FROM users "
-    <> "OFFSET RANDOM() * (SELECT COUNT(*) FROM users) LIMIT 1")
+    <> "OFFSET FLOOR(RANDOM() * (SELECT COUNT(*) FROM users)) LIMIT 1")
   return $ head res
 
 site :: ReaderErrorSnap ()
