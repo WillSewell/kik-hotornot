@@ -21,7 +21,7 @@ import Database.PostgreSQL.Simple
   , query_
   )
 import Database.PostgreSQL.Simple.FromRow (FromRow(fromRow), field)
-import Snap.Core (Snap, getParam, ifTop, writeBS)
+import Snap.Core (Snap, getParam, ifTop, modifyResponse, setContentType, writeBS)
 import Snap.Http.Server (quickHttpServe)
 import qualified Data.Aeson as A
 import qualified Data.ByteString.Lazy as BL
@@ -90,6 +90,7 @@ site :: ReaderErrorSnap ()
 site = do
   user <- getRandomUser
   Just param <- getParam "callback"
+  modifyResponse (setContentType "application/javascript")
   writeBS param
   writeBS "("
   ifTop $ writeBS $ BL.toStrict $ A.encode user
