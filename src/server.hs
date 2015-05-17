@@ -18,21 +18,26 @@ import Database.PostgreSQL.Simple
   , connectPassword
   , connectUser
   , defaultConnectInfo
+  , execute
   , query_
   )
 import Database.PostgreSQL.Simple.FromRow (FromRow(fromRow), field)
 import Snap.Core
   ( Snap
   , getParam
+  , getsRequest
   , ifTop
   , modifyResponse
   , route
+  , rqParams
   , setContentType
   , writeBS
   )
 import Snap.Http.Server (quickHttpServe)
 import qualified Data.Aeson as A
+import qualified Data.ByteString as B
 import qualified Data.ByteString.Lazy as BL
+import qualified Data.Map.Lazy as M
 import qualified Data.Text as T
 
 data User = User
@@ -94,6 +99,14 @@ getRandomUser = do
     <> "OFFSET FLOOR(RANDOM() * (SELECT COUNT(*) FROM users)) LIMIT 1")
   return $ head res
 
+rateUser :: B.ByteString -> B.ByteString -> Bool -> ReaderErrorSnap ()
+rateUser rater ratee isHot = do
+  conn <- ask
+  _ <- liftIO $ execute conn
+    ("INSERT INTO ratings (rater, ratee, is_hot) VALUES (?, ?, ?)")
+    (rater, ratee, isHot)
+  return ()
+
 randomUserHandler :: ReaderErrorSnap ()
 randomUserHandler = do
   user <- getRandomUser
@@ -104,6 +117,16 @@ randomUserHandler = do
   ifTop $ writeBS $ BL.toStrict $ A.encode user
   writeBS ")"
 
+likeHandler :: ReaderErrorSnap ()
+likeHandler = do
+  params <- getsRequest rqParams
+  rater <- maybe (throwError "No param rater!") return (M.lookup "rater" params)
+  ratee <- maybe (throwError "No param ratee!") return (M.lookup "ratee" params)
+  rateUser (head rater) (head ratee) True
+  
 site :: ReaderErrorSnap ()
 site = do
-  route [("/random-user", randomUserHandler)]
+  route
+    [ ("/random-user", randomUserHandler)
+    , ("/like/:rater/:ratee", likeHandler)
+    ]

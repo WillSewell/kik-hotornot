@@ -12,6 +12,7 @@ executable kik-hotornot
                        base,
                        bytestring,
                        ConfigFile,
+                       containers,
                        MissingH,
                        mtl,
                        postgresql-simple,
